@@ -1,0 +1,122 @@
+####
+#Author: Jez Murray, Amalia Kadarusman
+#Lab Session: Wed 3-5pm
+#Date Begun: 01/04/2020
+#Date Completed:
+#Task: Assignment 2
+####
+
+#Task 1
+#def plotFreqs(letter):
+#  letterList = ['A', 8.17, 'a', 8.17, 'B', 1.49, 'b', 1.49, 'C', 2.78, 'c', 2.78, 'D', 4.25, 'd', 4.25, 'E', 12.7, 'e', 12.7, 'F', 2.23, 'f', 2.23, 'G', 2.02, 'g', 2.02, 'H', 6.09, 'h', 6.09, 'I', 6.97, 'i', 6.97, 'J', 0.15, 'j', 0.15, 'K', 0.77, 'k', 0.77, 'L', 4.03, 'l', 4.03, 'M', 2.41, 'm', 2.41, 'N', 6.75, 'n', 6.75, 'O', 7.51, 'o', 7.51, 'P', 1.93, 'p', 1.93, 'Q', 0.10, 'q', 0.10, 'R', 5.99, 'r', 5.99, 'S', 6.33, 's', 6.33, 'T', 9.06, 't', 9.06, 'U', 2.76, 'u', 2.76, 'V', 0.98, 'v', 0.98, 'W', 2.36, 'w', 2.36, 'X', 0.15, 'x', 0.15, 'Y', 1.97, 'y', 1.97, 'Z', 0.07, 'z', 0.07]
+#  index = letterList.index(letter)
+#  freq = letterList[index + 1]
+#  print(freq)
+    
+def plotFreqs(name, height):
+  #A hard coded list of each letter followed by its appropriate frequency
+  letterList = ['A', 8.17, 'a', 8.17, 'B', 1.49, 'b', 1.49, 'C', 2.78, 'c', 2.78, 'D', 4.25, 'd', 4.25, 'E', 12.7, 'e', 12.7, 'F', 2.23, 'f', 2.23, 'G', 2.02, 'g', 2.02, 'H', 6.09, 'h', 6.09, 'I', 6.97, 'i', 6.97, 'J', 0.15, 'j', 0.15, 'K', 0.77, 'k', 0.77, 'L', 4.03, 'l', 4.03, 'M', 2.41, 'm', 2.41, 'N', 6.75, 'n', 6.75, 'O', 7.51, 'o', 7.51, 'P', 1.93, 'p', 1.93, 'Q', 0.10, 'q', 0.10, 'R', 5.99, 'r', 5.99, 'S', 6.33, 's', 6.33, 'T', 9.06, 't', 9.06, 'U', 2.76, 'u', 2.76, 'V', 0.98, 'v', 0.98, 'W', 2.36, 'w', 2.36, 'X', 0.15, 'x', 0.15, 'Y', 1.97, 'y', 1.97, 'Z', 0.07, 'z', 0.07]
+  #A list of the characters in the argument 'name'
+  nameList = list(name)
+  #Removes spaces from the name
+  noSpace = name.replace(" ", "")
+  #Removes "-" from the name
+  noLine = noSpace.replace("-", "")
+  #Removes "'" from the name
+  noNothing = noLine.replace("'", "")
+  #A list of all the letters in the argument 'name'
+  letters = list(noNothing)
+  sum = 0
+  #Loops through each letter in the name and adds the frequency to the sum of the name.
+  for i in letters:
+    index = letterList.index(i)
+    freq = letterList[index + 1]
+    sum = freq + sum
+  #Calculates the average of the sum.
+  average = sum / len(letters)
+  #Rounds the average to 1 decimal place
+  roundedAverage = round(average, 1)
+  
+  
+  #Gap for the commonness message to be printed, plus the characters of the name
+  bottomGap = 50
+  #Gap for the percentages to be printed
+  sideGap = 50
+  
+  #used to calculate the width of the picture according to how many characters there are in 'name'
+  characterCount = len(nameList)
+  print(characterCount)
+  
+  width = 50 + (characterCount * 40) + 10
+  #Creating an empty picture for the graph to be placed into
+  graph = makeEmptyPicture(width, height)
+  #Vertical axis
+  addLine(graph, sideGap, 0, sideGap, height-bottomGap)
+  #Horizontal axis
+  addLine(graph, 0, height-bottomGap, width-1, height-bottomGap)
+  #Message written at the bottom of graph, showing the commonness of the name
+  message = "Commonness of " + name + " is " + str(roundedAverage)
+  #Prints message underneath the horizontal axis
+  addText(graph, 60, height - 10, message)
+  #Starting point for the characters to be printed underneath the horizontal axis
+  startingPoint = 70
+  for i in nameList:
+    #placing each character into the picture
+    addText(graph, startingPoint, height - 30, i)
+    startingPoint = startingPoint + 40
+  #Finding the hightest value frequency in 'name'
+  value2 = 0
+  for i in letters:
+    index = letterList.index(i)
+    value = letterList[index+1]
+    value1 = value
+    if value1 > value2:
+      value2 = value1
+  #The gap between each frequency value as a percentage
+  verticalGap = 1/math.ceil(value2)
+  print(verticalGap)
+  
+  #This is where the frequency points will start to be placed
+  freqStartingPoint = height - bottomGap + 5
+  #A loop which places each frequency value along the vertical line
+  for number in range(0, (math.ceil(value2)+1)):
+    number = str(number) + "%"
+    if number != "0%":
+      addText(graph, 17, int(freqStartingPoint), number)
+      
+    freqStartingPoint = freqStartingPoint - ((height - 100)*verticalGap)
+    
+  #A loop which places the notches next to each frequency number
+  freqStartingPoint = height - bottomGap + 5
+  for number in range(0, (math.ceil(value2)+1)):
+    number = str(number) + "%"
+    
+    addLine(graph, 45,(int(freqStartingPoint)-5), 50, (int(freqStartingPoint)-5)) 
+      
+    freqStartingPoint = freqStartingPoint - ((height - 100)*verticalGap)
+  
+  #Initialising variables used for creating the rectangles
+  xStartingPoint = 60
+  recHeight = 0
+  recWidth = 20
+  yStartingPoint = 0
+  #Loops through each character in the name and either adds a rectangle for letters, or leaves other characters empty
+  for i in nameList:
+    #If the character in the list is a letter, a rectabgle will be added.
+    if(i.isalpha()) == True:
+      index = letterList.index(i)
+      freq = letterList[index + 1]
+      #Calculates the height of the rectangle needed based off of the vertical gap length previously calculated
+      recHeight = (((height - 100)*verticalGap) * freq)
+      yStartingPoint = height - bottomGap - recHeight
+      addRectFilled(graph, xStartingPoint, int(yStartingPoint), recWidth, int(recHeight), green)
+      xStartingPoint = xStartingPoint + 40
+    #If a character is not a letter, the xStartingpoint must be progressed.  
+    else:
+      xStartingPoint = xStartingPoint + 40
+  
+  #Finally adding the horizontal line which shows the average. Previous variables and calculations are used to ad the line.
+  lineHeight = (((height - 100)*verticalGap) * roundedAverage)
+  yStartingPointLine = height - bottomGap - lineHeight        
+  addLine(graph, sideGap, int(yStartingPointLine), (width-1), int(yStartingPointLine))  
+  repaint(graph)
